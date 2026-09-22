@@ -1,0 +1,8 @@
+# Ambiente experimental — gerado em 2026-09-21T23:00:25-03:00
+Host: Workstation2 — Ubuntu 22.04.5 LTS — kernel 6.8.0-138-generic
+CPU: 20 núcleos — RAM: 
+Diretório de trabalho: /dados/lucca/tcc-nids-hids
+Python: Python 3.10.12
+tshark: TShark (Wireshark) 3.6.2 (Git v3.6.2 packaged as 3.6.2-2)
+Suricata: não instalado — pendente para as semanas 2-3
+Zeek: não instalado — pendente para as semanas 2-3
