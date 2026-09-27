@@ -1,0 +1,57 @@
+arquivos (15):
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_apt/scenario_3_ssh_apt/attacker/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_apt/scenario_3_ssh_apt/corpdns/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_apt/scenario_3_ssh_apt/inetfw/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_apt/scenario_3_ssh_apt/linuxshare/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_apt/scenario_3_ssh_apt/reposerver/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_healthcheck/scenario_3_ssh_healthcheck/attacker/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_healthcheck/scenario_3_ssh_healthcheck/corpdns/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_healthcheck/scenario_3_ssh_healthcheck/inetfw/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_healthcheck/scenario_3_ssh_healthcheck/linuxshare/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_healthcheck/scenario_3_ssh_healthcheck/reposerver/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet/attacker/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet/corpdns/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet/inetfw/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet/linuxshare/logs/log/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet/reposerver/logs/log/auth.log
+
+formato das linhas: {'iso8601': 597, 'syslog': 609}
+linhas do sshd: 482
+
+host | dia | failed | invalid_user | accepted
+attacker | 2025-12-11 | 0 | 0 | 7
+attacker | 2025-12-12 | 0 | 0 | 14
+corpdns | 12-11 | 0 | 0 | 2
+corpdns | 12-12 | 0 | 0 | 3
+inetfw | 12-11 | 0 | 0 | 3
+inetfw | 12-12 | 0 | 0 | 5
+linuxshare | 2025-12-11 | 0 | 0 | 2
+linuxshare | 2025-12-12 | 0 | 0 | 4
+puppet | 12-11 | 17 | 8 | 5
+puppet | 12-12 | 32 | 16 | 9
+
+top IPs [failed]: [('192.42.1.174', 49)]
+top usuários [failed]: [('admin', 21), ('root', 15), ('john', 13)]
+
+top IPs [accepted]: [('192.42.0.201', 26), ('172.17.100.201', 16), ('192.42.1.174', 6), ('192.168.100.201', 5), ('10.12.0.223', 1)]
+top usuários [accepted]: [('aecid', 47), ('john', 6), ('root', 1)]
+
+top IPs [invalid_user]: [('192.42.1.174', 24)]
+top usuários [invalid_user]: [('admin', 24)]
+
+exemplos:
+  [accepted] auth.log: 2025-12-12T10:16:22.970834+00:00 attacker sshd[3115]: Accepted publickey for aecid from 192.42.0.201 port 58578 ssh2: RSA SHA256:yxAJcMgl5WTSlj4ZPvj7TSgUbIlxQ1GHdtXeIcp0czs
+  [invalid_user] auth.log: Dec 12 10:28:22 puppet sshd[3566]: Invalid user admin from 192.42.1.174 port 40674
+  [failed] auth.log: Dec 12 10:28:24 puppet sshd[3568]: Failed password for invalid user admin from 192.42.1.174 port 40682 ssh2
+
+mensagens do sshd não classificadas (mais comuns):
+       46  pam_unix(sshd:auth): authentication failure; logname= uid=N euid=N tty
+       30  Received disconnect from N.N.N.N port N:N: disconnected by user
+       26  pam_unix(sshd:session): session opened for user aecid(uid=N) by (uid=N
+       24  pam_unix(sshd:session): session closed for user ubuntu
+       21  pam_unix(sshd:session): session opened for user aecid(uid=N) by aecid(
+       21  pam_unix(sshd:auth): check pass; user unknown
+       21  Connection closed by invalid user admin N.N.N.N port N [preauth]
+       18  pam_unix(sshd:session): session closed for user aecid
+       15  Server listening on :: port N.
+       14  Disconnected from user aecid N.N.N.N port N

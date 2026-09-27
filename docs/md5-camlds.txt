@@ -1,0 +1,3 @@
+scenario_3_ssh_apt.zip: SUCESSO
+scenario_3_ssh_healthcheck.zip: SUCESSO
+scenario_3_ssh_puppet.zip: SUCESSO

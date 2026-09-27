@@ -15,3 +15,7 @@ export PATH=/dados/lucca/opt/bin:$PATH
 
 # cortesia com a máquina compartilhada
 alias gentil='nice -n 19 ionice -c 3'
+export CAM=$TCC/data/raw/camlds/scenario_3_ssh_puppet/scenario_3_ssh_puppet
+export AIT=$TCC/data/raw/ait_ldsv2/russellmitchell
+export PCAPS=$TCC/data/raw/camlds_pcaps/scenario_3_ssh_puppet
+export ATK=192.42.1.174
