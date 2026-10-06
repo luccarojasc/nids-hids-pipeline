@@ -1,0 +1,60 @@
+arquivos (20):
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/cloud_share/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/cloud_share/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/davey_mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/davey_mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/inet-dns/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/inet-dns/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/inet-firewall/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/inet-firewall/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/internal_share/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/internal_share/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/intranet_server/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/intranet_server/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/morris_mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/morris_mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/vpn/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/vpn/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/webserver/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell/gather/webserver/logs/auth.log.1
+
+formato das linhas: {'syslog': 6818}
+linhas do sshd: 130
+
+host | dia | failed | invalid_user | accepted
+davey-mail | 01-20 | 0 | 0 | 7
+davey-mail | 01-25 | 0 | 0 | 2
+inet-dns | 01-20 | 0 | 0 | 4
+inet-dns | 01-25 | 0 | 0 | 3
+intranet-server | 01-21 | 0 | 0 | 2
+intranet-server | 01-23 | 0 | 0 | 1
+mail | 01-21 | 0 | 0 | 2
+mail | 01-23 | 0 | 0 | 1
+morris-mail | 01-20 | 0 | 0 | 5
+morris-mail | 01-25 | 0 | 0 | 2
+
+top IPs [failed]: []
+top usuários [failed]: []
+
+top IPs [accepted]: [('192.168.230.221', 23), ('172.19.131.174', 6)]
+top usuários [accepted]: [('ait', 23), ('jhall', 6)]
+
+top IPs [invalid_user]: []
+top usuários [invalid_user]: []
+
+exemplos:
+  [accepted] auth.log: Jan 25 06:55:22 davey-mail sshd[8644]: Accepted publickey for ait from 192.168.230.221 port 42488 ssh2: RSA SHA256:yxAJcMgl5WTSlj4ZPvj7TSgUbIlxQ1GHdtXeIcp0czs
+
+mensagens do sshd não classificadas (mais comuns):
+       23  pam_unix(sshd:session): session opened for user ait by (uid=N)
+       20  pam_unix(sshd:session): session closed for user ait
+       10  Did not receive identification string from N.N.N.N port N
+       10  Server listening on N.N.N.N port N.
+       10  Server listening on :: port N.
+        7  Received signal N; terminating.
+        6  pam_unix(sshd:session): session closed for user jhall
+        6  pam_unix(sshd:session): session opened for user jhall by (uid=N)
+        4  Received disconnect from N.N.N.N port N:N: disconnected by user
+        3  Disconnected from N.N.N.N port N
