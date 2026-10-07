@@ -251,3 +251,52 @@ O arquivo `$AIT/labels/intranet_server/logs/auth.log` contém oito entradas JSON
 | Extra — relógios | Aprovado nos hosts verificados: CAM `--year 2025 --tz-offset 0`; AIT `--year 2022 --tz-offset 0`. |
 
 A Parte 1 foi percorrida, com resultados parciais documentados. A ausência de falhas legítimas no testbed russellmitchell deve orientar o ajuste metodológico no CP1. O próximo passo operacional é o **Bloco B — item 7, inspeção dos PCAPs**.
+
+**Item 7 — seleção do PCAP para investigar o ataque**
+
+Os quatro arquivos encontrados pertencem ao diretório de captura do host `inetfw` e foram lidos pelo `capinfos`. Seus intervalos foram conferidos com apresentação explícita em UTC.
+
+Foi selecionado o arquivo:
+
+`$TCC/data/raw/camlds_pcaps/scenario_3_ssh_puppet/scenario_3_ssh_puppet/inetfw/logs/log/suricata/log.pcap.1765542807`
+
+Características verificadas:
+
+- **848.328 pacotes**.
+- Início: **2025-12-12 12:33:27.736199 UTC**.
+- Término: **2025-12-12 12:45:25.143118 UTC**.
+- Duração: **717,406919 segundos**.
+
+Esse intervalo abrange o episódio SSH identificado nos logs, aproximadamente entre 12:42:33 e 12:42:55 UTC. A escolha automática pelo maior tamanho havia selecionado um arquivo posterior ao episódio.
+
+**Estado:** legibilidade e cobertura temporal confirmadas. A presença do tráfego do atacante, a contagem de conexões e o alinhamento dos eventos de rede com os logs de host permanecem em verificação. A consulta inicial considera as portas 22 e 10022.
+**tráfego SSH identificado**
+
+No PCAP selecionado, foram encontrados 313 pacotes com origem 192.42.1.174, destino 172.17.100.122 e porta de destino 22. Os IPs correspondem ao atacante e ao alvo reposerver/puppet identificados nos logs de host.
+
+**Item 7 — PCAP legível, tráfego do atacante e alinhamento temporal**
+
+**Resultado: aprovado no escopo do gate.**
+
+Foi analisado o PCAP:
+
+`$TCC/data/raw/camlds_pcaps/scenario_3_ssh_puppet/scenario_3_ssh_puppet/inetfw/logs/log/suricata/log.pcap.1765542807`
+
+O arquivo é legível e cobre o episódio SSH investigado. Foram encontrados **313 pacotes** com origem `192.42.1.174`, destino `172.17.100.122` e porta de destino `22`, correspondentes ao atacante e ao alvo `reposerver/puppet`.
+
+A consulta de pacotes com `SYN=1` e `ACK=0` retornou **21 registros**. Após remover repetições da combinação de `tcp.stream` e porta de origem, permaneceram **21 conexões distintas com SYN observado**.
+
+**Alinhamento temporal — 12/12/2025:**
+
+| Evento | Horário UTC |
+|---|---|
+| Início do `hydra` no AttackMate, interpretado conforme o alinhamento validado | 12:42:33.203732 |
+| Primeiro SYN selecionado | 12:42:33.998535 |
+| Primeira falha no `auth.log` do alvo | 12:42:35 |
+| Último SYN selecionado | 12:42:54.804278 |
+
+O primeiro SYN ocorre aproximadamente 0,795 segundo após o início do `hydra` e antecede a primeira falha de autenticação em aproximadamente um segundo, atendendo ao critério de proximidade temporal.
+
+As 21 aberturas observadas concentram-se em **20,805743 segundos**, dentro da janela padrão de cinco minutos. O volume supera 10 aberturas, mas a contagem definitiva de `Nn` depende da verificação das durações e da aplicação da definição de conexão curta. O SYN isoladamente não comprova estabelecimento completo da conexão.
+
+Evidência preservada em `$TCC/docs/gate-camlds-puppet-syn.tsv`.
