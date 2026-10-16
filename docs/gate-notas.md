@@ -385,3 +385,7 @@ Os sucessos brutos do AIT não serão tratados automaticamente como atividade be
 Os dados e resultados negativos dos dois testbeds serão preservados. A inclusão de `santos` na ingestão não fica automaticamente aprovada por esta decisão.
 
 O próximo entregável é o relatório CP1, conforme a seção 3.2, incorporando esta decisão, as evidências disponíveis, as limitações e as pendências. O tempo ativo da investigação permanece pendente de registro em `docs/horas.md`.
+
+### 16/10/2026 — Disponibilidade das ferramentas — seção 4.0
+
+`command -v apptainer suricata tshark` retornou somente `/usr/bin/tshark`. Apptainer e Suricata não foram encontrados no PATH da sessão. A ingestão de host pode prosseguir; `tshark` permanece como alternativa para a etapa de rede.
