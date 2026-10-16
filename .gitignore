@@ -6,3 +6,6 @@ out/
 *.zip
 *.sif
 __pycache__/
+*.parquet
+*.duckdb
+.pytest_cache/

@@ -300,3 +300,88 @@ O primeiro SYN ocorre aproximadamente 0,795 segundo após o início do `hydra` e
 As 21 aberturas observadas concentram-se em **20,805743 segundos**, dentro da janela padrão de cinco minutos. O volume supera 10 aberturas, mas a contagem definitiva de `Nn` depende da verificação das durações e da aplicação da definição de conexão curta. O SYN isoladamente não comprova estabelecimento completo da conexão.
 
 Evidência preservada em `$TCC/docs/gate-camlds-puppet-syn.tsv`.
+
+## 2026-10-15 — Encerramento da triagem de `santos` — opção (b)
+
+### Proveniência e preparação
+
+- Base: AIT-LDS v2.1, testbed `santos`, registro Zenodo `19483937`, conforme o guia operacional. DOI específico ainda não conferido.
+- Pacote adquirido: `santos_no-pcaps.zip`, com tamanho local exibido de `551M`.
+- MD5 de referência: `cb484a2c55ea03c63c556f0531fe8367`. Conferência local: `SUCESSO`.
+- Teste interno do ZIP: `No errors detected in compressed data`.
+- Extração concluída com status `0`, volume de `6,8G` e **12.165 arquivos**.
+- Raiz efetiva: `/dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem`, contendo `gather`, `labels` e `dataset.yaml`.
+- `$SANTOS` persistido em `env/env.sh` e conferido após carregamento.
+- `$AIT` preservado em `/dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2/russellmitchell`; os resultados do primeiro testbed, adquirido na versão v2.0, permanecem separados.
+
+Uma tentativa anterior de extração falhou com status `9` porque `SANTOS_ZIP` e `SANTOS_EXTRACT` estavam vazias. A contagem zero daquela tentativa era inválida. Após restaurar os caminhos, a extração foi concluída.
+
+A busca encontrou três diretórios chamados `gather`: dois pertencem aos playbooks Ansible; a árvore de dados confirmada é `$SANTOS/gather`.
+
+### Metadados e período
+
+Conteúdo de `$SANTOS/dataset.yaml`:
+
+- `name`: `processed_santos_scenario`
+- `start`: `2022-01-14T00:00:00`
+- `end`: `2022-01-18T00:00:00`
+
+O intervalo previsto para avaliação é **[2022-01-14 00:00:00, 2022-01-18 00:00:00)**. Os metadados não apresentam fuso ou offset. O relógio dos hosts de `santos` ainda não foi validado; não foi assumido offset zero por analogia com outro testbed.
+
+### Cobertura e resultados brutos
+
+Foram encontrados **30 diretórios de hosts** diretamente em `gather`. O inventário identificou **20 arquivos de autenticação em dez hosts**, sendo um `auth.log` e um `auth.log.1` por host.
+
+O relatório de `ssh_auth_stats.py`, executado com `--top 200`, leu exatamente esses 20 arquivos. Nenhum caminho lido pertence a `labels` ou `attacker_0`.
+
+| Medida | Resultado bruto |
+|---|---:|
+| Linhas reconhecidas como syslog | 6.744 |
+| Linhas de `sshd` | 148 |
+| Sucessos (`accepted`) | 38 |
+| Falhas (`failed`) | 0 |
+| `invalid_user` | 0 |
+| Host-dias com falhas | 0 |
+| Mediana de falhas nos host-dias com falhas | Não aplicável — conjunto vazio |
+
+Os sucessos distribuem-se em 36 eventos do usuário `ait`, originados de `10.229.3.27`, e dois de `gmorgan`, originados de `172.21.128.119`. Essas identificações não comprovam benignidade.
+
+A distribuição nominal por data é: **29 sucessos em 13/01, dois em 16/01 e sete em 18/01**. Comparando apenas os carimbos apresentados, os grupos de 13/01 e 18/01 ficam fora da janela declarada. Essa observação não substitui a normalização temporal. Os dois sucessos de 16/01 também não foram aprovados como amostra benigna.
+
+As 148 mensagens de `sshd` foram reconciliadas em **38 sucessos + 110 mensagens não classificadas**. As 110 mensagens aparecem em 11 categorias; `--top 200` comporta todas elas. Os grupos exibidos não revelaram falhas de autenticação omitidas pelo reconhecimento. Timeout, desconexão e ausência de identificação SSH não foram contados como erros de senha.
+
+### Resultado e limites
+
+A opção **(b) foi executada com resultado negativo para o requisito de encontrar falhas SSH benignas**: não foram observadas falhas SSH nos arquivos examinados, após conferir o inventário e as categorias não classificadas.
+
+O **item 5 permanece parcial**. A validação de rótulos e relógios de `santos` não foi concluída; os números elegíveis de sucessos não foram apurados. A cobertura de rede de `santos` não foi validada nesta triagem.
+
+Os resultados não constituem medição de falsos positivos: o motor B1/B2/B3 ainda não foi executado. Este recorte não permite demonstrar redução de FP de B3 em relação a B2 baseada em falhas SSH benignas.
+
+**Encaminhamento recomendado para o CP1:** propor o caminho (a), preservar os resultados dos dois testbeds e explicitar os limites da comparação. A adoção de (a) ainda depende de decisão explícita. Não iniciar automaticamente outro testbed ou aquisição adicional de PCAPs.
+
+### Evidências e horas
+
+- `$TCC/docs/md5-ait-santos-v2_1.txt`
+- `$TCC/docs/zip-test-ait-santos-v2_1.txt`
+- `$TCC/docs/extracao-ait-santos-v2_1.txt`
+- `$TCC/docs/gate-ait-santos-auth.txt` — existência conferida; tamanho exibido de `3,4K`.
+- `$SANTOS/dataset.yaml`
+
+Tempo ativo da aquisição, preparação e triagem: **pendente de informação**. Tempo de espera pelo download: **pendente de informação**. Registrar separadamente em `$TCC/docs/horas.md`; ainda não é possível verificar o cumprimento do orçamento de 2–3 horas ativas.
+
+## 2026-10-15 — Decisão após a opção (b): adoção do caminho (a)
+
+**Decisão: prosseguir com GO com ajuste de desenho, adotando o caminho (a).**
+
+A investigação adicional prevista na opção (b) foi concluída em `santos`. Após conferir os arquivos examinados e o reconhecimento das mensagens, foram observados 38 sucessos SSH brutos e zero falhas. O primeiro testbed, `russellmitchell`, permanece registrado separadamente, com 29 sucessos brutos e zero falhas.
+
+O item 5 permanece parcial: não foi encontrado o substrato de falhas SSH benignas necessário para testar a redução de falsos positivos de B3 em relação a B2 nesse recorte.
+
+O trabalho prosseguirá com o CAM e com os recortes AIT cuja elegibilidade for validada. B1/B2/B3 serão mantidos como configurações do mesmo motor. A comparação entre elas ficará limitada aos recortes com telemetria correspondente e critérios de avaliação documentados.
+
+Os sucessos brutos do AIT não serão tratados automaticamente como atividade benigna. Rótulos, período da simulação, relógios e exposição observável deverão ser definidos antes das métricas. Zero alertas ou zero falsos positivos somente poderão ser apresentados como resultados após a execução do motor.
+
+Os dados e resultados negativos dos dois testbeds serão preservados. A inclusão de `santos` na ingestão não fica automaticamente aprovada por esta decisão.
+
+O próximo entregável é o relatório CP1, conforme a seção 3.2, incorporando esta decisão, as evidências disponíveis, as limitações e as pendências. O tempo ativo da investigação permanece pendente de registro em `docs/horas.md`.

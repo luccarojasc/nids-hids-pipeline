@@ -1,0 +1,58 @@
+arquivos (20):
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/cloud_share/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/cloud_share/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/hayes_mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/hayes_mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/inet-dns/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/inet-dns/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/inet-firewall/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/inet-firewall/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/internal_share/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/internal_share/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/intranet_server/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/intranet_server/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/rogersturnbull_mail/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/rogersturnbull_mail/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/vpn/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/vpn/logs/auth.log.1
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/webserver/logs/auth.log
+  /dados/lucca/tcc-nids-hids/data/raw/ait_ldsv2_1/santos_triagem/gather/webserver/logs/auth.log.1
+
+formato das linhas: {'syslog': 6744}
+linhas do sshd: 148
+
+host | dia | failed | invalid_user | accepted
+hayes-mail | 01-13 | 0 | 0 | 10
+hayes-mail | 01-18 | 0 | 0 | 2
+inet-dns | 01-13 | 0 | 0 | 8
+inet-dns | 01-18 | 0 | 0 | 3
+mail | 01-16 | 0 | 0 | 2
+rogersturnbull-mail | 01-13 | 0 | 0 | 11
+rogersturnbull-mail | 01-18 | 0 | 0 | 2
+
+top IPs [failed]: []
+top usuários [failed]: []
+
+top IPs [accepted]: [('10.229.3.27', 36), ('172.21.128.119', 2)]
+top usuários [accepted]: [('ait', 36), ('gmorgan', 2)]
+
+top IPs [invalid_user]: []
+top usuários [invalid_user]: []
+
+exemplos:
+  [accepted] auth.log: Jan 18 05:42:29 hayes-mail sshd[13411]: Accepted publickey for ait from 10.229.3.27 port 40694 ssh2: RSA SHA256:yxAJcMgl5WTSlj4ZPvj7TSgUbIlxQ1GHdtXeIcp0czs
+
+mensagens do sshd não classificadas (mais comuns):
+       36  pam_unix(sshd:session): session opened for user ait by (uid=N)
+       32  pam_unix(sshd:session): session closed for user ait
+       10  Server listening on N.N.N.N port N.
+       10  Server listening on :: port N.
+        7  Received signal N; terminating.
+        5  Did not receive identification string from N.N.N.N port N
+        2  Timeout, client not responding.
+        2  pam_unix(sshd:session): session opened for user gmorgan by (uid=N)
+        2  Received disconnect from N.N.N.N port N:N: disconnected by user
+        2  Disconnected from N.N.N.N port N
+        2  pam_unix(sshd:session): session closed for user gmorgan
