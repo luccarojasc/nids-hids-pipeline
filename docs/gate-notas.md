@@ -499,3 +499,56 @@ Os horários apresentados são os extremos de cada grupo, incluindo falhas e suc
   Resultado: 8 passed in 0.27s; status 0.
   Os testes complementam as conferências realizadas nos dados
   ingeridos e na comparação entre as fontes de host.
+
+  ## Parte 5 — ingestão de rede e unificação — 18/10/2026
+
+### Implementação e resultados
+
+- CAM puppet: quatro PCAPs do sensor inetfw processados com
+  TShark 3.6.2; 22 registros de conexão TCP/22.
+- AIT russellmitchell: EVEs de intranet_server e mail, incluindo
+  eve.json.1 de mail, processados pelo parser Python; 88 registros
+  de fluxo TCP/22. Não foi necessário executar Suricata localmente.
+- O parser EVE preserva event.end, flow_id, estado e motivo do
+  fluxo e estado TCP, além do caminho do arquivo de origem.
+- A view eventos reúne 285 registros brutos: 175 de host,
+  22 de rede CAM e 88 de rede AIT. A unificação não deduplica
+  registros nem aplica a seleção para avaliação.
+
+### Validação cruzada
+
+- CAM: o teste de fumaça encontrou 16 falhas de autenticação
+  de 192.42.1.174, entre 12:42:35 e 12:42:39 UTC de 12/12/2025,
+  e 21 aberturas de rede desse IP, entre aproximadamente
+  12:42:33.998535 e 12:42:54.804278 UTC.
+- Das 21 conexões do atacante, 20 possuem duração calculada
+  e uma permanece com duração desconhecida. Não foram encontradas
+  durações negativas ou iguais a zero nesse conjunto.
+- A mediana das durações conhecidas é 2,04 s. A duração do extrator
+  tshark corresponde ao intervalo entre o SYN inicial e o último
+  FIN/RST observado no mesmo arquivo.
+- Na consulta de fumaça, rede_fim representa a última abertura,
+  não o último encerramento.
+- AIT: os seis sucessos de host selecionados na janela operacional
+  [21/01/2022, 25/01/2022), em UTC, possuem correspondências por
+  sensor, IP e porta de origem, com início de fluxo no mesmo
+  segundo registrado no auth.log.
+- Um registro adicional da porta 49828 começa 7.269,635156 s após
+  o horário daquele login. Foi preservado, sem ser tratado como
+  uma segunda correspondência temporal ao mesmo sucesso.
+
+### Limites e pendências do CP2
+
+- A correspondência dos seis eventos AIT não demonstra cobertura
+  contínua nem certifica uma amostra benigna.
+- Permanecem pendentes a seleção por rótulos, a exposição observável
+  e o tratamento de sobreposição, fragmentação ou repetição de fluxos.
+- É necessário fixar a definição operacional de conexão curta e Nn,
+  incluindo durações ausentes e diferenças entre tshark e EVE.
+- A atribuição da evidência de rede à chave da regra deve ser
+  documentada; o sensor de rede não identifica diretamente o usuário SSH.
+- Os indicadores success/failure dos parsers de rede não representam
+  resultados de autenticação SSH.
+- O motor B1/B2/B3 não foi executado; não há medição de falsos positivos.
+- Santos permanece fora da ingestão. O item 5 do gate permanece parcial.
+- O teste de fumaça foi aprovado, mas o CP2 ainda não está fechado.
