@@ -267,3 +267,11 @@ As configurações B1, B2 e B3 serão implementadas no mesmo motor,
 em etapa posterior. A conclusão desta etapa de ingestão não
 constitui execução das regras, medição de falsos positivos
 ou demonstração de eficácia da mitigação.
+
+A revisão de elegibilidade posterior à ingestão delimitou o uso
+atual do AIT à validação técnica e à exploração do motor.
+Não foi estabelecido um recorte pareado elegível para métricas
+de falsos positivos: os rótulos examinados não classificam
+diretamente as conexões curtas, e a exposição observável permanece
+não demonstrada. A implementação do motor pode prosseguir,
+preservando essa restrição de avaliação.

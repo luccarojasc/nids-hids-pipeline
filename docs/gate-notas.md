@@ -657,3 +657,51 @@ continuam pendentes.
 O motor B1/B2/B3 não foi executado e não há medição de falsos positivos.
 Santos permanece fora da ingestão. O item 5 do gate permanece parcial.
 O CP2 ainda aguarda a consolidação documental e a escrita da seção 3.1.
+
+## Delimitação do recorte AIT e encaminhamento do CP2 — 18/10/2026
+
+A inspeção dos rótulos de intranet_server identificou:
+- auth.log: linhas 145–152, com rótulos de troca de usuário,
+  escalada de privilégios e comandos/sessões sudo;
+- audit.log: linhas 1860–1868, com rótulos associados a su e sudo.
+
+Esses registros não constituem contagens de tentativas SSH e não
+fornecem classificação direta das quatro conexões curtas observadas
+em 24/01/2022.
+
+No inventário realizado sob os diretórios de rótulos dos dois hosts,
+não foram encontrados arquivos de rótulos de rede nem arquivos de
+rótulos para mail. Essa ausência não foi interpretada como prova
+de benignidade ou de ausência de ataque.
+
+### Decisão de uso
+
+O recorte AIT permanece disponível para:
+- validação dos parsers e da normalização;
+- inspeção dos registros de rede;
+- validação das seis correspondências entre sucessos de host
+  e conexões observadas nos PCAPs;
+- execução exploratória do motor, com resultados não apresentados
+  como métricas de eficácia enquanto a elegibilidade não for estabelecida.
+
+Neste estágio, não está habilitado para calcular FP, FP/host-dia
+ou redução de FP entre B1/B2/B3. Permanecem não demonstradas
+a classificação benigna da rede e a exposição observável necessária.
+Um recorte pareado elegível para essas métricas não foi estabelecido.
+
+### Estado do checkpoint
+
+A implementação da ingestão, a unificação, o teste de integração,
+a definição operacional de duração e o rascunho da seção 3.1
+estão concluídos.
+
+O encaminhamento é prosseguir à implementação do motor, preservando
+essas restrições. Isso não equivale à aprovação integral dos
+requisitos de avaliação experimental do CP2.
+
+A avaliação do CAM também dependerá da definição de episódios,
+rótulos e associação das evidências à chave da regra. Não se presume
+disparo de B3 a partir das contagens agregadas.
+
+Não serão iniciadas novas aquisições ou investigações de outros
+testbeds como consequência automática deste fechamento.
