@@ -389,3 +389,113 @@ O próximo entregável é o relatório CP1, conforme a seção 3.2, incorporando
 ### 16/10/2026 — Disponibilidade das ferramentas — seção 4.0
 
 `command -v apptainer suricata tshark` retornou somente `/usr/bin/tshark`. Apptainer e Suricata não foram encontrados no PATH da sessão. A ingestão de host pode prosseguir; `tshark` permanece como alternativa para a etapa de rede.
+
+### 17/10/2026 — Seção 4.4: ingestão de autenticação do CAM `puppet`
+
+Execução concluída com status 0: quatro arquivos processados e 32 eventos gravados em `$TCC/data/processed/ecs/host/authlog_camlds_puppet.parquet`. Existência conferida com `ls`; tamanho exibido de 14K.
+
+Contagens:
+- `ssh_login/failure`: 16, todas no host `puppet`.
+- `ssh_login/success`: oito — quatro em `puppet`, dois em `inetfw`, um em `corpdns` e um em `linuxshare`.
+- `ssh_invalid_user/failure`: oito em `puppet`, mantidos separados das falhas de login.
+
+O total de falhas de login em `puppet` corresponde ao gate. A conferência detalhada por IP, usuário e horário permanece pendente. Os quatro sucessos do host ainda não foram discriminados por usuário.
+
+### 17/10/2026 — Seção 4.4: ingestão de autenticação de `russellmitchell`
+
+Execução concluída com status 0: 20 arquivos processados e 29 eventos gravados em `$TCC/data/processed/ecs/host/authlog_ait_russellmitchell.parquet`. Existência conferida com `ls`; tamanho exibido de 14K.
+
+Todos os eventos são `ssh_login/success`: nove em `davey-mail`, sete em `inet-dns`, três em `intranet-server`, três em `mail` e sete em `morris-mail`. Nenhuma falha ou mensagem `ssh_invalid_user` foi produzida.
+
+As contagens brutas correspondem ao gate. A seleção da amostra benigna e a conferência detalhada dos eventos permanecem pendentes.
+
+17/10/2026 — Seção 4.5: executor `scripts/q.py` e consulta `sql/views_host.sql` executados com status 0. A view `host` retornou 61 eventos, compatíveis com os 32 do CAM e 29 de `russellmitchell`. Banco `data/processed/eventos.duckdb` conferido, com tamanho exibido de 268K. O total inclui oito eventos `ssh_invalid_user`.
+
+### 17/10/2026 — Seção 4.5: conferência por cenário, host, IP e usuário
+
+A consulta `sql/check_host.sql` terminou com status 0 e retornou 12 grupos, totalizando 53 eventos `ssh_login`: 16 falhas e 37 sucessos. Os oito eventos `ssh_invalid_user` foram excluídos pelo filtro de ação.
+
+No CAM `puppet`, para o atacante `192.42.1.174`:
+
+| Usuário | Falhas | Sucessos |
+|---|---:|---:|
+| admin | 7 | 0 |
+| root | 5 | 0 |
+| john | 4 | 2 |
+
+As contagens correspondem ao gate. Os quatro sucessos do host `puppet` dividem-se em dois de `john`, do atacante, e dois de `aecid`, de `172.17.100.201`.
+
+O CAM possui seis sucessos de `aecid` nos quatro hosts apresentados e dois sucessos de `john`, totalizando oito. O papel e a elegibilidade da atividade de `aecid` não foram certificados apenas pela identidade.
+
+Em `russellmitchell`, os 29 sucessos brutos dividem-se em 23 de `ait`, de `192.168.230.221`, e seis de `jhall`, de `172.19.131.174`. Não foram encontradas falhas.
+
+Os horários apresentados são os extremos de cada grupo, incluindo falhas e sucessos; não representam uma listagem individual dos logins aceitos. A seleção por período, rótulos e contexto permanece pendente.
+
+- 17/10/2026 — Seção 4.5: configuração de processamento de
+  russellmitchell examinada. `servers.yaml` declara UTC; o template
+  obtém o fuso dos fatos Ansible; `input.conf` atribui esse fuso aos
+  eventos e `system.conf` o utiliza.
+  Para a consulta exploratória, adotada a janela
+  [2022-01-21T00:00:00Z, 2022-01-25T00:00:00Z).
+  A interpretação UTC dos limites é uma inferência apoiada na
+  configuração local e no código documentado de `dataset.trim`;
+  o metadado original não explicita offset e a versão exata do
+  processador original não foi identificada.
+  Contagens sem rótulo não constituem ainda a amostra benigna final.
+
+  Referência:
+  https://ait-aecid.github.io/kyoushi-dataset/reference/processors/
+
+  - 17/10/2026 — Seção 4.5: `sql/ait_benigno.sql` executado com
+  status 0, sob a interpretação operacional UTC documentada.
+  Na janela [2022-01-21T00:00:00Z, 2022-01-25T00:00:00Z),
+  permaneceram seis sucessos SSH sem rótulo: três em
+  intranet-server e três em mail. Cada host apresentou dois
+  sucessos em 21/01 e um em 23/01.
+  Foram observadas zero falhas, zero autenticações rotuladas
+  e zero valores nulos em `labels.attack`.
+  Dos 29 sucessos brutos, 23 ficaram fora da janela.
+  A classificação benigna e a cobertura observável permanecem
+  em validação. As quatro linhas da consulta não constituem
+  um denominador de exposição. Não houve medição de FP;
+  o item 5 permanece parcial.
+
+  - 17/10/2026 — Seção 4.6: ingestão da auditoria CAM puppet
+  concluída com status 0: quatro arquivos e 84 registros.
+  Saída: `data/processed/ecs/host/auditd_camlds_puppet.parquet`.
+  Foram extraídas 16 falhas `auditd_user_auth`, concordantes
+  em quantidade com o gate. Os 32 registros de falha
+  `auditd_user_login` não serão somados como novas tentativas.
+  A auditoria utiliza `host.name=reposerver`, enquanto o
+  auth.log utiliza `puppet`; normalização pendente antes da
+  correlação. A comparação dos IPs e horários entre os
+  parquets ainda será executada.
+
+  - 17/10/2026 — Auditoria AIT russellmitchell reprocessada após
+  normalização de intranet_server → intranet-server.
+  Execução com status 0; preservadas as contagens de sete
+  arquivos e 30 registros, distribuídos igualmente entre
+  intranet-server e mail. Comparação entre fontes ainda pendente.
+
+  - 18/10/2026 — Seção 4.6: comparação entre fontes CAM executada
+  com status 0 para puppet e origem 192.42.1.174.
+  Ambas apresentam 16 falhas nas ações selecionadas.
+
+  Horários em UTC, em 12/12/2025:
+
+  | Fonte / ação | Falhas | Primeiro registro | Último registro |
+  |---|---:|---|---|
+  | auditd.log / auditd_user_auth | 16 | 12:42:34.368 | 12:42:36.864 |
+  | system.auth / ssh_login | 16 | 12:42:35 | 12:42:39 |
+
+  Diferenças entre os extremos: 0,632 s no início e 2,136 s
+  no fim. Conferência agregada de contagem e alinhamento
+  temporal atendida para esse recorte.
+  A consulta não verifica correspondência individual entre
+  todos os registros. As fontes não serão somadas em Nh.
+
+  - 18/10/2026 — Seção 4.7: executados os testes de
+  tests/test_authlog.py e tests/test_auditd.py.
+  Resultado: 8 passed in 0.27s; status 0.
+  Os testes complementam as conferências realizadas nos dados
+  ingeridos e na comparação entre as fontes de host.
