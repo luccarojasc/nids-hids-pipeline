@@ -1,0 +1,49 @@
+[1mdiff --git a/src/ingest/tshark_conns.py b/src/ingest/tshark_conns.py[m
+[1mindex 96e0f91..414f455 100644[m
+[1m--- a/src/ingest/tshark_conns.py[m
+[1m+++ b/src/ingest/tshark_conns.py[m
+[36m@@ -2,6 +2,7 @@[m [mimport argparse[m
+ import subprocess[m
+ import sys[m
+ from pathlib import Path[m
+[32m+[m[32mfrom decimal import Decimal[m
+ [m
+ import pandas as pd[m
+ [m
+[36m@@ -29,15 +30,19 @@[m [mdef connections(rows):[m
+     conns = {}[m
+     for r in rows:[m
+         c = conns.setdefault(r["tcp.stream"], {"start": None, "end": None, "client": None, "established": False})[m
+[31m-        t = float(r["frame.time_epoch"])[m
+[32m+[m[32m        t = int(Decimal(r["frame.time_epoch"]) * 1_000_000_000)[m
+         syn, ack = r["tcp.flags.syn"] in TRUE, r["tcp.flags.ack"] in TRUE[m
+         if syn and not ack and c["client"] is None:[m
+             c["start"] = t[m
+             c["client"] = (r["ip.src"], int(r["tcp.srcport"]), r["ip.dst"], int(r["tcp.dstport"]))[m
+         elif syn and ack:[m
+             c["established"] = True[m
+[31m-        if r["tcp.flags.fin"] in TRUE or r["tcp.flags.reset"] in TRUE:[m
+[31m-            c["end"] = t if c["end"] is None else max(c["end"], t)[m
+[32m+[m[32m        if ([m
+[32m+[m[32m            c["start"] is not None[m
+[32m+[m[32m            and t >= c["start"][m
+[32m+[m[32m            and (r["tcp.flags.fin"] in TRUE or r["tcp.flags.reset"] in TRUE)[m
+[32m+[m[32m        ):[m
+[32m+[m[32m            c["end"] = t if c["end"] is None else min(c["end"], t)[m
+     return conns[m
+ [m
+ [m
+[36m@@ -48,7 +53,12 @@[m [mdef to_rows(conns, pcap, dataset, scenario):[m
+         sip, sport, dip, dport = c["client"][m
+         dur = c["end"] - c["start"] if c["end"] is not None else None[m
+         yield {[m
+[31m-            "@timestamp": pd.Timestamp(c["start"], unit="s", tz="UTC"),[m
+[32m+[m[32m            "event.duration": dur,[m
+[32m+[m[32m            "event.end": ([m
+[32m+[m[32m                pd.Timestamp(c["end"], unit="ns", tz="UTC")[m
+[32m+[m[32m                if c["end"] is not None else None[m
+[32m+[m[32m            ),[m
+[32m+[m[32m            "labels.duration_method": "syn_to_first_fin_or_rst_v1",[m
+             "event.kind": "event",[m
+             "event.category": "network",[m
+             "event.action": "tcp_connection",[m

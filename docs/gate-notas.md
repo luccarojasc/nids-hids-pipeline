@@ -552,3 +552,108 @@ Os horários apresentados são os extremos de cada grupo, incluindo falhas e suc
 - O motor B1/B2/B3 não foi executado; não há medição de falsos positivos.
 - Santos permanece fora da ingestão. O item 5 do gate permanece parcial.
 - O teste de fumaça foi aprovado, mas o CP2 ainda não está fechado.
+
+## Refinamento do plano de rede — 18/10/2026
+
+### Decisão e implementação
+
+Após consultar a proposta, confirmou-se que não havia limite numérico
+definido para "conexão curta". Foram preservados os parâmetros
+Δt = 5 minutos, θh = 5 e θn = 10.
+
+Adotou-se, para a avaliação exploratória, a definição operacional:
+conexão TCP destinada à porta 22, com SYN inicial observado e duração
+0 < d ≤ 5 segundos até o primeiro FIN ou RST posterior.
+
+O limite de 5 segundos é uma convenção de engenharia estabelecida
+após a inspeção inicial dos dados. Não constitui padrão do protocolo,
+limiar validado como ótimo ou hipótese registrada antes de observar
+as durações. Não será ajustado para produzir disparos.
+
+O parser tshark_conns.py foi alterado para:
+- converter timestamps para nanossegundos inteiros usando Decimal;
+- considerar o primeiro FIN/RST após o SYN, em vez do último;
+- preservar event.end;
+- identificar o método por
+  labels.duration_method = syn_to_first_fin_or_rst_v1.
+
+event.end representa o primeiro sinal de encerramento observado,
+não a comprovação de encerramento completo da sessão TCP.
+Conexões sem esse sinal permanecem com duração desconhecida.
+A ingestão preserva conexões longas e incompletas; o corte de duração
+será aplicado na seleção para o contador.
+
+### Uniformização dos instrumentos
+
+Foram encontrados PCAPs locais de intranet_server e mail, permitindo
+usar o mesmo extrator no CAM e no AIT. Os dois PCAPs AIT abrangem
+os horários dos seis sucessos de host previamente selecionados.
+
+Os EVEs foram úteis para inspeção e validação cruzada. Sua duração
+baseada em flow.start/flow.end não foi tratada como equivalente
+ao intervalo SYN → primeiro FIN/RST.
+
+A representação ativa de rede passou a usar somente tshark.conn:
+- CAM puppet: 22 conexões;
+- AIT russellmitchell: 22 conexões.
+
+Os Parquets anteriores foram preservados no diretório de arquivo
+out/rede_anterior.* informado durante a atualização. O Parquet EVE
+AIT foi retirado da pasta ativa para evitar a soma de representações
+do mesmo tráfego. Os dados brutos não foram alterados.
+
+A view eventos contém agora 219 registros brutos:
+175 de host, 22 de rede CAM e 22 de rede AIT.
+O total anterior de 285 permanece como resultado histórico da
+representação inicial, não como total da versão ativa.
+
+### Conferência dos resultados
+
+| Recorte | Registros | Duração ausente | 0 < d ≤ 5 s | d > 5 s |
+|---|---:|---:|---:|---:|
+| CAM — atacante 192.42.1.174 | 21 | 1 | 19 | 1 |
+| AIT — bruto | 22 | 8 | 4 | 10 |
+| AIT — aberturas em [21/01/2022, 25/01/2022), UTC | 10 | 1 | 4 | 5 |
+
+Não foram encontradas durações conhecidas não positivas nesses recortes.
+
+As seis correspondências de sucessos de host AIT foram preservadas
+por sensor, IP, porta de origem e proximidade temporal. Cinco possuem
+duração acima de 5 segundos; uma permanece sem duração conhecida.
+
+A conexão da porta 39296 apresenta aproximadamente 50 horas entre
+o SYN e o primeiro FIN/RST observado. Esse intervalo não demonstra
+atividade contínua. Pela definição adotada, não é uma conexão curta.
+
+### Critérios para a implementação do motor
+
+- Nh contará falhas system.auth / ssh_login. Auditd será corroboração;
+  ssh_invalid_user não será somado novamente.
+- A janela será (t − 5 minutos, t].
+- Para Nn, a abertura deverá pertencer à janela e a evidência do
+  primeiro FIN/RST já deverá estar disponível em t.
+- Uma conexão somente poderá contribuir como curta após a observação
+  do sinal de encerramento; essa informação não será antecipada ao SYN.
+- A contagem será por conexão, tratando retransmissões e sobreposições.
+  tcp.stream é local ao arquivo; reutilização de porta não identifica,
+  isoladamente, a mesma conexão.
+- B1 deverá operar com evidência de rede, sem consultar usuários
+  ou falhas de host para detectar.
+- Em B3, a atribuição ao usuário usará host/destino, IP, porta de origem
+  e compatibilidade temporal. Associações ambíguas serão explicitadas,
+  sem distribuir automaticamente todas as conexões do IP entre usuários.
+- Esses critérios orientam o motor; sua implementação ainda não ocorreu.
+
+### Limites remanescentes
+
+As contagens por duração não são Nn final por usuário e janela.
+As quatro conexões curtas AIT ainda não estão certificadas como benignas.
+
+A correspondência de seis eventos e os limites temporais dos PCAPs
+não comprovam cobertura contínua. Seleção por rótulos, exposição
+observável, sobreposições e elegibilidade da comparação pareada
+continuam pendentes.
+
+O motor B1/B2/B3 não foi executado e não há medição de falsos positivos.
+Santos permanece fora da ingestão. O item 5 do gate permanece parcial.
+O CP2 ainda aguarda a consolidação documental e a escrita da seção 3.1.

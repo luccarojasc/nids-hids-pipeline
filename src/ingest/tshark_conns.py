@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
+from decimal import Decimal
 
 import pandas as pd
 
@@ -29,15 +30,19 @@ def connections(rows):
     conns = {}
     for r in rows:
         c = conns.setdefault(r["tcp.stream"], {"start": None, "end": None, "client": None, "established": False})
-        t = float(r["frame.time_epoch"])
+        t = int(Decimal(r["frame.time_epoch"]) * 1_000_000_000)
         syn, ack = r["tcp.flags.syn"] in TRUE, r["tcp.flags.ack"] in TRUE
         if syn and not ack and c["client"] is None:
             c["start"] = t
             c["client"] = (r["ip.src"], int(r["tcp.srcport"]), r["ip.dst"], int(r["tcp.dstport"]))
         elif syn and ack:
             c["established"] = True
-        if r["tcp.flags.fin"] in TRUE or r["tcp.flags.reset"] in TRUE:
-            c["end"] = t if c["end"] is None else max(c["end"], t)
+        if (
+            c["start"] is not None
+            and t >= c["start"]
+            and (r["tcp.flags.fin"] in TRUE or r["tcp.flags.reset"] in TRUE)
+        ):
+            c["end"] = t if c["end"] is None else min(c["end"], t)
     return conns
 
 
@@ -45,16 +50,22 @@ def to_rows(conns, pcap, dataset, scenario):
     for stream, c in conns.items():
         if c["client"] is None:
             continue
+
         sip, sport, dip, dport = c["client"]
         dur = c["end"] - c["start"] if c["end"] is not None else None
+
         yield {
-            "@timestamp": pd.Timestamp(c["start"], unit="s", tz="UTC"),
+            "@timestamp": pd.Timestamp(c["start"], unit="ns", tz="UTC"),
             "event.kind": "event",
             "event.category": "network",
             "event.action": "tcp_connection",
             "event.outcome": "success" if c["established"] else "failure",
             "event.dataset": "tshark.conn",
-            "event.duration": int(dur * 1e9) if dur is not None else None,
+            "event.duration": dur,
+            "event.end": (
+                pd.Timestamp(c["end"], unit="ns", tz="UTC")
+                if c["end"] is not None else None
+            ),
             "network.transport": "tcp",
             "source.ip": sip,
             "source.port": sport,
@@ -64,6 +75,7 @@ def to_rows(conns, pcap, dataset, scenario):
             "labels.dataset": dataset,
             "labels.scenario": scenario,
             "labels.stream": int(stream),
+            "labels.duration_method": "syn_to_first_fin_or_rst_v1",
         }
 
 
