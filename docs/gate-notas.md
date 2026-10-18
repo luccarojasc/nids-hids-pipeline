@@ -705,3 +705,51 @@ disparo de B3 a partir das contagens agregadas.
 
 Não serão iniciadas novas aquisições ou investigações de outros
 testbeds como consequência automática deste fechamento.
+
+## Semana 4 — núcleo temporal e associação — 18/10/2026
+
+Foi implementado e executado o núcleo offline sob o contrato semana4_v1, definido em config/motor-semana4.json e docs/motor-contrato-semana4.md.
+
+Execução:
+out/semana4/execucao-20261018T163915Z.
+
+### Validação técnica
+
+- 23 testes do motor aprovados; suíte completa com 31 testes aprovados.
+- Inspeção, execução e verificação das saídas com status 0.
+- 219 registros brutos reconciliados; 57 selecionados: 26 de autenticação e 31 de rede.
+- 162 exclusões explicitadas por motivo.
+- Nenhuma duplicata exata removida; nenhuma interrupção por conflito detectado.
+- Integridade posterior dos seis Parquets confirmada por SHA-256.
+
+O núcleo separa Nh, Nn_rede e Nn_associado e preserva os IDs contribuintes. Conexões só contribuem como curtas após a disponibilidade do primeiro FIN/RST, com início ainda na janela. Auditd e Invalid user não são somados a Nh.
+
+A associação utiliza cenário, alvo, origem, porta e compatibilidade temporal. Estados desconhecidos ou ambíguos não recebem usuário por suposição, e conexões não são replicadas entre usuários.
+
+### Resultados observados
+
+No CAM puppet, para 192.42.1.174:
+
+| Usuário | Máximo Nh | Máximo Nn_associado |
+|---|---:|---:|
+| admin | 7 | 7 |
+| root | 5 | 3 |
+| john | 4 | 5 |
+
+Máximo Nn_rede: 19. Os máximos separados não demonstram satisfação simultânea dos limiares nem emissão de alerta.
+
+As cinco conexões curtas associadas a john correspondem a quatro falhas e um sucesso. Outro sucesso foi associado a uma conexão sem duração, excluída de Nn. Nh permanece 4.
+
+No AIT, as seis correspondências de sucessos de jhall foram preservadas: cinco conexões longas e uma sem duração. Nh e Nn_associado tiveram máximo zero; Nn_rede teve máximo dois em cada alvo. As quatro conexões curtas de 24/01 permaneceram sem usuário associado.
+
+No conjunto da execução, 24 mensagens tiveram candidato único naquele instante e duas ficaram sem candidato. Ao final, 23 conexões tinham usuário único e oito permaneceram desconhecidas. Não foram reportadas ambiguidades.
+
+As duas mensagens sem candidato são sucessos de aecid no CAM. As oito conexões desconhecidas são quatro curtas CAM e quatro curtas AIT. Ausência de associação não comprova ausência de tráfego ou benignidade.
+
+### Documentação e continuidade
+
+Detalhes, hashes e exemplos rastreados estão em docs/semana4-verificacao.md. A redação parcial foi consolidada em docs/secao-3-2-motor-rascunho.md.
+
+A validação técnica e a redação desta etapa foram realizadas; o versionamento final ainda será conferido.
+
+A Semana 4 não conclui o CP3 nem mede falsos positivos. AIT mantém uso técnico/exploratório; Santos permanece fora da ingestão. A próxima etapa é a Semana 5: configurações B1/B2/B3, alertas, Sigma, score/criticidade, convenção de episódios e conclusão da seção 3.2.

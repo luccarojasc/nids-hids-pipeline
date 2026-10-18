@@ -1,0 +1,41 @@
+{
+  "contract_version": "semana4_v1",
+  "window_ns": 300000000000,
+  "host_threshold": 5,
+  "network_threshold": 10,
+  "short_max_ns": 5000000000,
+  "host_resolution_ns": 1000000000,
+  "association_max_age_ns": 300000000000,
+  "close_tolerance_ns": 1000000000,
+  "duration_method": "syn_to_first_fin_or_rst_v1",
+  "cases": [
+    {
+      "dataset": "camlds", "scenario": "scenario_3_ssh_puppet",
+      "start": null, "end": null,
+      "use": "validacao_tecnica_cam",
+      "targets": [
+        {"host": "puppet", "ip": "172.17.100.122", "port": 22,
+         "sensor_path": "/inetfw/"}
+      ]
+    },
+    {
+      "dataset": "ait", "scenario": "russellmitchell",
+      "start": "2022-01-21T00:00:00Z", "end": "2022-01-25T00:00:00Z",
+      "use": "exploratorio_sem_metricas_fp",
+      "targets": [
+        {"host": "intranet-server", "ip": "10.143.2.4", "port": 22,
+         "sensor_path": "/gather/intranet_server/"},
+        {"host": "mail", "ip": "172.19.130.4", "port": 22,
+         "sensor_path": "/gather/mail/"}
+      ]
+    }
+  ],
+  "inputs": [
+    {"path": "data/processed/ecs/host/authlog_camlds_puppet.parquet", "role": "auth", "rows": 32, "dataset": "camlds", "scenario": "scenario_3_ssh_puppet"},
+    {"path": "data/processed/ecs/host/auditd_camlds_puppet.parquet", "role": "audit", "rows": 84, "dataset": "camlds", "scenario": "scenario_3_ssh_puppet"},
+    {"path": "data/processed/ecs/host/authlog_ait_russellmitchell.parquet", "role": "auth", "rows": 29, "dataset": "ait", "scenario": "russellmitchell"},
+    {"path": "data/processed/ecs/host/auditd_ait_russellmitchell.parquet", "role": "audit", "rows": 30, "dataset": "ait", "scenario": "russellmitchell"},
+    {"path": "data/processed/ecs/rede/tshark_camlds_puppet.parquet", "role": "net", "rows": 22, "dataset": "camlds", "scenario": "scenario_3_ssh_puppet"},
+    {"path": "data/processed/ecs/rede/tshark_ait_russellmitchell.parquet", "role": "net", "rows": 22, "dataset": "ait", "scenario": "russellmitchell"}
+  ]
+}

@@ -1,0 +1,1 @@
+"""Núcleo offline de correlação; Semana 4, sem alertas ou mitigação."""
