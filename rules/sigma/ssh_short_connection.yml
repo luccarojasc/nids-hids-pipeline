@@ -1,0 +1,24 @@
+title: TCC SSH Short TCP Connection Evidence
+id: 89784f20-66ca-45db-85b2-97392a747d05
+status: experimental
+description: Selects closed short connections; evidence is scheduled at event.end.
+author: TCC NIDS HIDS
+date: '2026-10-18'
+logsource:
+  product: tcc_pipeline
+  category: network_connection
+detection:
+  selection:
+    event.dataset: tshark.conn
+    event.action: tcp_connection
+    network.transport: tcp
+    destination.port: 22
+    labels.duration_method: syn_to_first_fin_or_rst_v1
+    labels.evidence_phase: closed
+    event.end|exists: true
+    event.duration|gt: 0
+    event.duration|lte: 5000000000
+  condition: selection
+falsepositives:
+  - Short TCP connections alone do not identify an authentication attempt or attack.
+level: informational

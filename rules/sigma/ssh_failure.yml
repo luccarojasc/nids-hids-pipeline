@@ -1,0 +1,18 @@
+title: TCC SSH Authentication Failure Evidence
+id: 35f73069-2ff3-48c9-a239-85e316e25f37
+status: experimental
+description: Selects normalized failure evidence; aggregation is performed in Python.
+author: TCC NIDS HIDS
+date: '2026-10-18'
+logsource:
+  product: tcc_pipeline
+  category: authentication
+detection:
+  selection:
+    event.dataset: system.auth
+    event.action: ssh_login
+    event.outcome: failure
+  condition: selection
+falsepositives:
+  - Legitimate authentication failures; a selected event is not an alert.
+level: informational

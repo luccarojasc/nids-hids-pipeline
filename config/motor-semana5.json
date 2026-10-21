@@ -1,0 +1,49 @@
+{
+  "contract_version": "semana5_v1",
+  "reference_dir": "out/semana4/execucao-20261018T163915Z",
+  "reference_code_sha256": "5ddfe6a89bf996a11d953662ae874fde3ae05c43e8991f222ea812f234461660",
+  "reference_config_sha256": "5b657978a3c0c40449365d18c5a1ffedc397319598b62b82bbdc4b04f9427f8b",
+  "expected_input_rows": 219,
+  "expected_selected_events": 57,
+  "window_ns": 300000000000,
+  "host_threshold": 5,
+  "network_threshold": 10,
+  "short_max_ns": 5000000000,
+  "critical_horizon_ns": 300000000000,
+  "base_score": 50,
+  "critical_score": 100,
+  "base_ttl_s": 900,
+  "critical_ttl_s": 1800,
+  "rules": {
+    "failure": "rules/sigma/ssh_failure.yml",
+    "success": "rules/sigma/ssh_success.yml",
+    "short": "rules/sigma/ssh_short_connection.yml"
+  },
+  "analysis_units": [
+    {
+      "id": "cam_puppet_ssh_observado_v1",
+      "dataset": "camlds", "scenario": "scenario_3_ssh_puppet",
+      "host": "puppet", "destination_ip": "172.17.100.122", "destination_port": 22,
+      "source_ip": "192.42.1.174",
+      "start": "2025-12-12T12:42:33.203732Z",
+      "end": "2025-12-12T12:47:56Z",
+      "classification": "sequencia_ssh_observada_limites_operacionais"
+    },
+    {
+      "id": "ait_intranet_exploratorio_v1",
+      "dataset": "ait", "scenario": "russellmitchell",
+      "host": "intranet-server", "destination_ip": "10.143.2.4", "destination_port": 22,
+      "source_ip": "172.19.131.174",
+      "start": "2022-01-21T00:00:00Z", "end": "2022-01-25T00:00:00Z",
+      "classification": "exploratorio_sem_classe_benigna_confirmada"
+    },
+    {
+      "id": "ait_mail_exploratorio_v1",
+      "dataset": "ait", "scenario": "russellmitchell",
+      "host": "mail", "destination_ip": "172.19.130.4", "destination_port": 22,
+      "source_ip": "172.19.131.174",
+      "start": "2022-01-21T00:00:00Z", "end": "2022-01-25T00:00:00Z",
+      "classification": "exploratorio_sem_classe_benigna_confirmada"
+    }
+  ]
+}

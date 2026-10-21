@@ -1,0 +1,18 @@
+title: TCC SSH Authentication Success Evidence
+id: b376469b-b0d3-4e56-8eca-06f242b80d39
+status: experimental
+description: Selects success evidence; criticality requires an earlier active alert.
+author: TCC NIDS HIDS
+date: '2026-10-18'
+logsource:
+  product: tcc_pipeline
+  category: authentication
+detection:
+  selection:
+    event.dataset: system.auth
+    event.action: ssh_login
+    event.outcome: success
+  condition: selection
+falsepositives:
+  - Successful authentication alone does not indicate an attack.
+level: informational
