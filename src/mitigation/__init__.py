@@ -1,0 +1,1 @@
+"""Semana 6: política offline e adaptador exclusivo de laboratório."""

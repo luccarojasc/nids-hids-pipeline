@@ -1,0 +1,16 @@
+{
+  "contract_version": "semana6_v1",
+  "reference_dir": "out/semana5/execucao-20261021T020309Z",
+  "reference_config_sha256": "589d1d6ceb59fd92da10cff985e071ae2ac435ec8dba46f58de411009492ada1",
+  "expected_alerts": {"B1": 1, "B2": 2, "B3": 0},
+  "base_ttl_s": 900,
+  "critical_ttl_s": 1800,
+  "base_score": 50,
+  "critical_score": 100,
+  "service_port": 22,
+  "clock": "logical_ns",
+  "executor": "simulation_only",
+  "renewal": "max_existing_and_request_deadline",
+  "close_policy": "keep_until_expiry",
+  "drain_timers": true
+}
