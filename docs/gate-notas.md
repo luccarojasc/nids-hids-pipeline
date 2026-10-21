@@ -753,3 +753,15 @@ Detalhes, hashes e exemplos rastreados estão em docs/semana4-verificacao.md. A 
 A validação técnica e a redação desta etapa foram realizadas; o versionamento final ainda será conferido.
 
 A Semana 4 não conclui o CP3 nem mede falsos positivos. AIT mantém uso técnico/exploratório; Santos permanece fora da ingestão. A próxima etapa é a Semana 5: configurações B1/B2/B3, alertas, Sigma, score/criticidade, convenção de episódios e conclusão da seção 3.2.
+
+## Semana 5 — decisões e verificação do motor
+
+A camada de alertas foi implementada sobre o núcleo preservado da Semana 4. B1 recebe somente rede; B2 somente auth; B3 aplica os dois limiares com associação por usuário. Permanecem janela de 300 s, Nh≥5, Nn≥10 e duração curta positiva até 5 s.
+
+Foram explicitados nesta versão: score ordinal 50/100, supressão enquanto o predicado permanece verdadeiro, reabertura após queda do predicado e criticidade por sucesso estritamente posterior na mesma chave. B3 exige associação única do sucesso. B1 não utiliza host para promoção crítica. TTL 900/1.800 s é recomendação registrada, sem execução de mitigação.
+
+As três seleções-base são descritas em Sigma e interpretadas pelo subconjunto local documentado; agregação e estado permanecem em Python. A comparação usa unidades descritivas comuns, sem replicar B1 por usuário ou tratar o intervalo operacional CAM como término de ataque comprovado.
+
+Resultados, testes, pacote de execução e proveniência estão em docs/cp3-relatorio.md. Contrato em docs/motor-contrato-semana5.md e seção 3.2 consolidada em docs/secao-3-2-motor.md. O relatório distingue resultados observados de expectativas e documenta não disparos.
+
+AIT continua exploratório, com métricas desabilitadas. O item 5 permanece parcial e Santos fora da ingestão. Testes positivos controlados não ampliam a amostra experimental. Não foram reduzidos limiares para obter alerta B3.
