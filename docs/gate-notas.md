@@ -765,3 +765,47 @@ As três seleções-base são descritas em Sigma e interpretadas pelo subconjunt
 Resultados, testes, pacote de execução e proveniência estão em docs/cp3-relatorio.md. Contrato em docs/motor-contrato-semana5.md e seção 3.2 consolidada em docs/secao-3-2-motor.md. O relatório distingue resultados observados de expectativas e documenta não disparos.
 
 AIT continua exploratório, com métricas desabilitadas. O item 5 permanece parcial e Santos fora da ingestão. Testes positivos controlados não ampliam a amostra experimental. Não foram reduzidos limiares para obter alerta B3.
+
+## Semana 6 — política de TTL e verificação do CP4
+
+Registro atualizado em 25/10/2026, America/Sao_Paulo.
+
+A camada de contenção consome as transições preservadas da Semana 5, mantendo B1, B2 e B3 separados. A chave agrega usuários da mesma origem, alvo e serviço dentro do mesmo escopo, preservando a proveniência dos alertas.
+
+Foram mantidos TTL normal de 900 segundos e crítico de 1.800 segundos. A renovação preserva o maior prazo; solicitações que não ampliam o prazo são retidas sem atualização do executor. Duplicatas idênticas não renovam novamente a contenção, e o encerramento de um alerta não antecipa a expiração.
+
+### Execução offline
+
+A execução `out/semana6/execucao-20261021T111452Z` foi conferida por inspect, run e verify, todos com status 0.
+
+B1 produziu uma aplicação e uma expiração projetada. B2 produziu uma aplicação, uma renovação e uma expiração projetada, compartilhando a contenção entre os alertas de admin e root. B3 permaneceu sem ações. Os encerramentos dos alertas não cancelaram os prazos.
+
+As ações dessa execução são exclusivamente simuladas. Nenhum firewall foi executado na Workstation2, e os eventos dos datasets não foram alterados.
+
+Os 33 testes da Semana 6 e os 90 testes da suíte completa passaram.
+
+### Demonstração em VM
+
+A demonstração foi executada na VM própria `tcc-lab`, com perfil accelerated, divisor 150 e TTLs reais de 6 e 12 segundos. O perfil integral de 900/1.800 segundos não foi executado.
+
+As nove sondas corresponderam aos retornos esperados. A porta TCP/22 foi bloqueada após aplicação e renovação, permaneceu bloqueada após o prazo original e voltou a aceitar conexão após o prazo renovado. A porta TCP/2222 permaneceu acessível nas verificações de controle.
+
+As quatro capturas nftables foram revisadas. Elas registraram timeout inicial de 6 segundos, renovação para 12 segundos, permanência do elemento após o prazo original e ausência do elemento após a expiração. O contador acumulado terminou em três pacotes e 180 bytes; esses valores não representam autenticações SSH.
+
+A remoção dos dois namespaces terminou com status 0. O manifesto registrou completed: true e foi produzido o marcador SUCCESS.
+
+As evidências foram transferidas para a Workstation2, com SHA-256 coincidente na VM, no Windows e no destino remoto. A cópia extraída está em:
+
+`out/semana6/evidencias-vm/out/demo-20261025T162436Z`
+
+A demonstração utiliza um serviço TCP mínimo e casos controlados. Não comprova interrupção do ataque CAM, autenticação SSH, interrupção de sessões preexistentes ou permanência física pelos prazos integrais.
+
+### Documentação e continuidade
+
+Resultados, ambiente, hashes e limitações estão em `docs/cp4-relatorio.md`. O contrato está em `docs/mitigacao-contrato-semana6.md`, e a seção metodológica em `docs/secao-3-3-mitigacao.md`.
+
+As verificações técnicas e a documentação desta etapa foram concluídas. A conferência final do versionamento e do envio ao repositório remoto permanece pendente.
+
+AIT permanece exploratório, Santos fora da ingestão e o item 5 parcial. Métricas de falsos positivos e bloqueios corretos ou indevidos permanecem desabilitadas. Nenhum limiar do detector foi reduzido para produzir contenção.
+
+Após o fechamento documental e o versionamento do CP4, o próximo estágio é a Semana 7, com execuções delimitadas, configuração congelada e elegibilidade explícita. O fechamento técnico não implica aprovação do orientador.
