@@ -809,3 +809,57 @@ As verificações técnicas e a documentação desta etapa foram concluídas. A 
 AIT permanece exploratório, Santos fora da ingestão e o item 5 parcial. Métricas de falsos positivos e bloqueios corretos ou indevidos permanecem desabilitadas. Nenhum limiar do detector foi reduzido para produzir contenção.
 
 Após o fechamento documental e o versionamento do CP4, o próximo estágio é a Semana 7, com execuções delimitadas, configuração congelada e elegibilidade explícita. O fechamento técnico não implica aprovação do orientador.
+
+## Semana 7 — execuções delimitadas e comparação descritiva
+
+Registro da campanha: 25/10/2026, America/Sao_Paulo.
+
+### Continuidade da Semana 6
+
+O pesquisador confirmou a conclusão do commit e do push da Semana 6. O CP4 foi fechado tecnicamente no escopo delimitado, com política offline, demonstração acelerada em VM, evidências preservadas e documentação versionada.
+
+Essa atualização resolve o estado de versionamento pendente registrado anteriormente, sem alterar os manifestos históricos.
+
+### Protocolo e congelamento
+
+O protocolo foi registrado em `docs/protocolo-semana7.md` antes das execuções.
+
+Commit congelado:
+
+`8836ef9dcd9706c43a31535262b975aceae39360`
+
+Campanha:
+
+`out/semana7/campanha-20261026T011425Z`
+
+Foram preservados os parâmetros, as regras e as fontes do motor. A configuração utilizada foi `config/motor-semana5.json`. Os hashes foram registrados em `freeze.json`.
+
+### Execuções e verificações
+
+B1, B2 e B3 foram executados separadamente, além de uma execução conjunta all. As quatro execuções e as quatro verificações terminaram com status 0.
+
+A conferência confirmou integridade das fontes congeladas e equivalência de alertas, transições, decisões, verificações de criticidade e comparações por unidade entre modos separados, execução conjunta e referência da Semana 5.
+
+Foram produzidas nove linhas de comparação e três episódios de alerta. As execuções utilizam os mesmos dados: o número de novas amostras independentes é zero.
+
+### Resultados e rastreabilidade
+
+No CAM puppet, B1 produziu um episódio; B2 produziu dois, para admin e root; B3 não produziu episódios. Nos recortes AIT intranet-server e mail, nenhum modo produziu alertas.
+
+Os três episódios CAM tiveram score 50 e nenhuma promoção crítica. Todas as evidências referenciadas na abertura foram encontradas e estavam disponíveis no instante correspondente.
+
+As verificações de criticidade registraram ausência de alerta anterior ativo na chave correspondente. Os snapshots B3 registraram ambos os contadores abaixo dos limiares ou o contador de rede abaixo do limiar.
+
+Contagens entre modos não representam diretamente quantidades de ataques independentes. B1 utiliza chave de rede, enquanto B2/B3 incluem usuário na decisão.
+
+### Limites e documentação
+
+AIT permanece exploratório, Santos fora da ingestão e o item 5 parcial. Métricas permanecem desabilitadas. Zero alertas AIT não comprova zero falsos positivos, e ausência de alertas B3 não demonstra superioridade.
+
+Não houve alteração de limiares, aquisição, reingestão ou execução real de firewall nesta campanha. A demonstração CP4 permanece evidência separada do mecanismo em laboratório.
+
+Relatório: `docs/semana7-relatorio.md`.
+Texto para integração ao TCC: `docs/resultados-semana7.md`.
+Conferência reproduzível: `scripts/semana7_conferir.py`.
+
+As atividades técnicas e a documentação da Semana 7 foram concluídas. A conferência final do commit e do envio ao repositório remoto permanece pendente.
