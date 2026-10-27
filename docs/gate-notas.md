@@ -863,3 +863,73 @@ Texto para integração ao TCC: `docs/resultados-semana7.md`.
 Conferência reproduzível: `scripts/semana7_conferir.py`.
 
 As atividades técnicas e a documentação da Semana 7 foram concluídas. A conferência final do commit e do envio ao repositório remoto permanece pendente.
+
+## Semana 8 — análise de sensibilidade e CP5
+
+### Protocolo e execução
+
+Foi realizada uma análise de sensibilidade com janelas de 60, 300 e 600 segundos, preservando 300 segundos como configuração principal.
+
+Somente a janela dos contadores foi alterada em cópias das configurações. Permaneceram Nh ≥ 5, Nn ≥ 10, duração curta positiva até 5 segundos, horizonte de criticidade de 300 segundos e idade máxima de associação de 300 segundos. Dados, regras, critérios de associação, scores e TTLs foram preservados.
+
+Não houve ajuste de limiares para obter disparos de B3.
+
+Campanha: `out/semana8/campanha-20261027T004827Z`.
+
+Commit utilizado: `0a5011d57083f0fc6e1731465e28b748888520a7`.
+
+SHA-256 do manifesto: `76ad434926f6de880ea03e605ae007a52586d720a45b25801782f613a8663654`.
+
+A configuração original `config/motor-semana5.json` manteve o SHA-256 `589d1d6ceb59fd92da10cff985e071ae2ac435ec8dba46f58de411009492ada1`.
+
+### Verificações
+
+Os oito testes específicos da Semana 8 e os 98 testes da suíte completa foram aprovados. A execução e a verificação da campanha retornaram status 0.
+
+Foram conferidos hashes, reprodução dos resultados, variação exclusiva da janela e equivalência integral da variante de 300 segundos à referência da Semana 7.
+
+Os IDs das evidências de disparo foram encontrados, e suas disponibilidades temporais não ultrapassaram os instantes de abertura dos alertas.
+
+### Resultados observados
+
+A campanha utilizou 57 eventos selecionados entre 219 entradas: 26 de autenticação e 31 de rede. Duas conexões selecionadas apresentaram duração ausente. Os 114 registros de auditoria permaneceram destinados somente à corroboração.
+
+Em cada uma das três janelas:
+
+- CAM puppet: um episódio B1, dois episódios B2 para admin e root e nenhum episódio B3.
+- AIT intranet-server e mail: nenhum alerta nos três modos.
+- Nenhuma promoção crítica.
+
+Os instantes de abertura permaneceram iguais. Os encerramentos e as durações dos episódios variaram com a janela.
+
+| Janela | Duração B1 | Duração B2 / admin | Duração B2 / root |
+|---|---:|---:|---:|
+| 60 s | 57.956585 s | 59 s | 57 s |
+| 300 s | 297.956585 s | 299 s | 297 s |
+| 600 s | 597.956585 s | 599 s | 597 s |
+
+Na variante de 600 segundos, os três episódios encerraram após o limite operacional CAM de `2025-12-12T12:47:56Z`. Esse comportamento decorre da evolução dos contadores no replay e não amplia retrospectivamente a unidade de análise.
+
+Duração de episódio não representa duração comprovada do ataque, tempo de contenção ou TTL de bloqueio.
+
+### Interpretação e limites
+
+A estabilidade das aberturas e contagens se restringe aos dados e parâmetros examinados. Ela não demonstra insensibilidade geral à janela nem estabelece uma janela ótima.
+
+Os snapshots de B3 não são episódios independentes. As três parametrizações reutilizam os mesmos dados e não acrescentam amostras experimentais independentes.
+
+AIT permanece exploratório, com métricas desabilitadas. Zero alertas não equivale a zero falsos positivos demonstrados. O item 5 continua parcial, e Santos permanece fora da ingestão.
+
+Não foram estimados precisão, recall, F1, PR-AUC, FP/host-dia ou MTTD. A demonstração de mitigação da Semana 6 permanece separada da avaliação CAM/AIT.
+
+### Documentação e continuidade
+
+Protocolo: `docs/protocolo-semana8.md`.
+
+Relatório CP5: `docs/cp5-relatorio.md`.
+
+Texto de análise: `docs/analise-sensibilidade-semana8.md`.
+
+A análise técnica foi concluída e documentada. O fechamento documental e o versionamento final da Semana 8 ainda serão conferidos. O relatório CP5 não substitui a revisão acadêmica.
+
+A continuidade prevista é a consolidação do capítulo de resultados e discussão, integrando os resultados das Semanas 7 e 8 e preservando suas limitações.
