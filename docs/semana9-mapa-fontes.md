@@ -97,3 +97,17 @@ Este mapa não substitui as referências bibliográficas dos conjuntos de dados,
 - Revisar os avisos de compilação e a formatação global na etapa acordada.
 
 A elaboração deste mapa não encerra essas pendências nem certifica conformidade normativa integral.
+
+## 8. Conferência do projeto LaTeX após a revisão
+
+O projeto `TCC2___Lucca_Rojas_Cappi-v1.zip` foi recebido e seu capítulo de resultados foi conferido em código-fonte em 02/11/2026.
+
+Foram confirmados os ajustes de corroboração agregada, disponibilidade temporal e tratamento de solicitações críticas, além da remoção de repetições. A inclusão dos intervalos completos na seção 4.1 não foi adotada; sua apresentação permanece prevista para a atualização metodológica. A descrição da limpeza dos espaços de nomes também foi omitida do capítulo.
+
+Não foram identificadas novas divergências nos resultados apresentados. As referências internas do capítulo possuem identificadores correspondentes, sem labels duplicados no arquivo.
+
+SHA-256 de `capitulos/cap-resultados.tex` nesta versão:
+
+`db142605d62b1a0291797b352443dd177036bcda41884def8d69874bd0341081`
+
+O ZIP contém os fontes do projeto, mas não o PDF recompilado do trabalho. A conferência visual posterior aos ajustes permanece pendente.
