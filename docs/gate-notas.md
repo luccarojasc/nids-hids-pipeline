@@ -933,3 +933,21 @@ Texto de análise: `docs/analise-sensibilidade-semana8.md`.
 A análise técnica foi concluída e documentada. O fechamento documental e o versionamento final da Semana 8 ainda serão conferidos. O relatório CP5 não substitui a revisão acadêmica.
 
 A continuidade prevista é a consolidação do capítulo de resultados e discussão, integrando os resultados das Semanas 7 e 8 e preservando suas limitações.
+
+## Semana 9 — Redação e revisão inicial dos resultados
+
+Data: 02/11/2026.
+
+O capítulo 4 — Resultados e discussão — foi redigido no arquivo `capitulos/cap-resultados.tex` do projeto LaTeX do trabalho.
+
+O capítulo apresenta delimitação da avaliação, qualidade das evidências, resultados B1/B2/B3, associação e criticidade, sensibilidade temporal, mitigação offline, demonstração em VM, ameaças à validade e síntese dos achados.
+
+O PDF v1 foi revisado integralmente no capítulo 4. Foram conferidos os principais totais, horários, contadores e tabelas. Após a revisão, o autor informou a aplicação de ajustes para explicitar os intervalos das unidades, distinguir corroboração agregada de pareamento individual, esclarecer a disponibilidade temporal do host e reduzir repetições. O PDF posterior a esses ajustes ainda precisa de conferência.
+
+A rastreabilidade entre seções, tabelas, relatórios e pacotes de execução está registrada em `docs/semana9-mapa-fontes.md`.
+
+Não foram realizadas novas execuções experimentais nem alterados parâmetros ou resultados. Permanecem os limites já documentados: AIT exploratório, Santos fora da ingestão, ausência de métricas de eficácia, ausência de disparos B3 nos recortes examinados e distinção entre mitigação offline e demonstração controlada.
+
+O capítulo constitui uma versão inicial revisada. Permanecem pendentes a preservação identificável do projeto LaTeX e do PDF atualizado, a conferência dessa versão, as referências bibliográficas dos conjuntos de dados e a integração com os capítulos anteriores.
+
+Os avisos de compilação foram reservados, por decisão do autor, à revisão final. A atualização metodológica e a revisão global do trabalho permanecem nas etapas seguintes do plano.
